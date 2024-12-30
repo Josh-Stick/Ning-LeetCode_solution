@@ -1,8 +1,8 @@
 /*
- * @lc app=leetcode.cn id=98 lang=cpp
+ * @lc app=leetcode.cn id=108 lang=cpp
  * @lcpr version=
  *
- * [98] 验证二叉搜索树
+ * [108] 将有序数组转换为二叉搜索树
  */
 
 
@@ -37,16 +37,18 @@ using namespace std;
  * };
  */
 class Solution {
+private:
+    TreeNode* traversal(vector<int>& nums, int left, int right) {
+        if (left > right) return nullptr;
+        int mid = left + (right - left) / 2;
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = traversal(nums, left, mid - 1);
+        root->right = traversal(nums, mid + 1, right);
+        return root;
+    }
 public:
-    TreeNode* pre = nullptr; // 记录前一个节点，针对展开排好序的
-    bool isValidBST(TreeNode* root) {
-       if (root == nullptr) return true;
-       bool left = isValidBST(root->left);
-       if (pre != nullptr && pre->val >= root->val) return false;
-       pre = root;   // 关键
-       bool right = isValidBST(root->right);
-       return left && right;
-
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return traversal(nums, 0, nums.size() - 1);
     }
 };
 // @lc code=end
@@ -55,11 +57,11 @@ public:
 
 /*
 // @lcpr case=start
-// [2,1,3]\n
+// [-10,-3,0,5,9]\n
 // @lcpr case=end
 
 // @lcpr case=start
-// [5,1,4,null,null,3,6]\n
+// [1,3]\n
 // @lcpr case=end
 
  */

@@ -1,8 +1,8 @@
 /*
- * @lc app=leetcode.cn id=98 lang=cpp
+ * @lc app=leetcode.cn id=114 lang=cpp
  * @lcpr version=
  *
- * [98] 验证二叉搜索树
+ * [114] 二叉树展开为链表
  */
 
 
@@ -37,17 +37,17 @@ using namespace std;
  * };
  */
 class Solution {
+private:
+    TreeNode* head = nullptr;
 public:
-    TreeNode* pre = nullptr; // 记录前一个节点，针对展开排好序的
-    bool isValidBST(TreeNode* root) {
-       if (root == nullptr) return true;
-       bool left = isValidBST(root->left);
-       if (pre != nullptr && pre->val >= root->val) return false;
-       pre = root;   // 关键
-       bool right = isValidBST(root->right);
-       return left && right;
-
-    }
+    void flatten(TreeNode* root) {
+        if (root == nullptr) return;
+         flatten(root->right);   // 关键：采用头插法构建链表，也就是从节点 6 开始，在 6 的前面插入 5，在 5 的前面插入 4，依此类推。按照右子树 - 左子树 - 根的顺序 DFS 这棵树
+         flatten(root->left);
+         root->right = head;
+         root->left = nullptr;
+         head = root;
+     }
 };
 // @lc code=end
 
@@ -55,11 +55,15 @@ public:
 
 /*
 // @lcpr case=start
-// [2,1,3]\n
+// [1,2,5,3,4,null,6]\n
 // @lcpr case=end
 
 // @lcpr case=start
-// [5,1,4,null,null,3,6]\n
+// []\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [0]\n
 // @lcpr case=end
 
  */
